@@ -111,6 +111,71 @@ Responda APENAS em JSON válido, sem markdown, sem texto fora do JSON:
   }
 });
 
+// ════════════════════════════════════════════════════════════
+// FEEDBACK — envia email para o criador
+// ════════════════════════════════════════════════════════════
+app.post('/feedback', async (req, res) => {
+  const { mensagem, tipo, email, sessoes } = req.body;
+
+  if (!mensagem || mensagem.trim().length < 3) {
+    return res.status(400).json({ error: 'Mensagem muito curta.' });
+  }
+
+  if (!process.env.RESEND_API_KEY) {
+    return res.status(500).json({ error: 'Email não configurado no servidor.' });
+  }
+
+  const tipoLabel = {
+    elogio: '✦ Elogio',
+    sugestao: '💡 Sugestão',
+    problema: '⚠ Problema',
+    outro: '📝 Outro',
+  }[tipo] || '📝 Feedback';
+
+  const html = `
+    <div style="font-family:Georgia,serif;background:#0a0608;color:#f0e8d8;padding:32px;border-radius:8px;max-width:560px;margin:0 auto;">
+      <h1 style="color:#c9a84c;font-size:22px;letter-spacing:2px;margin-bottom:4px;">SOLOMON</h1>
+      <p style="color:#7a6230;font-size:12px;margin-bottom:24px;font-style:italic;">frequências de manifestação</p>
+      <h2 style="color:#c9a84c;font-size:16px;margin-bottom:16px;">${tipoLabel}</h2>
+      <div style="background:#1a1218;border:1px solid #3a2a1a;border-radius:6px;padding:16px;margin-bottom:16px;">
+        <p style="font-size:15px;line-height:1.7;color:#f0e8d8;">${String(mensagem).split('\n').join('<br>')}</p>
+      </div>
+      <div style="font-size:12px;color:#7a6230;border-top:1px solid #1a1218;padding-top:12px;">
+        ${email ? `<p>Email: ${email}</p>` : '<p>Usuário anônimo</p>'}
+        ${sessoes ? `<p>Sessões realizadas: ${sessoes}</p>` : ''}
+        <p>Data: ${new Date().toLocaleString('pt-BR', {timeZone: 'America/Recife'})}</p>
+      </div>
+    </div>
+  `;
+
+  try {
+    const resendRes = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: 'Solomon App <noreply@solomonapp.com.br>',
+        to: 'ronaldoipm23@gmail.com',
+        subject: `[Solomon] ${tipoLabel} de usuário`,
+        html,
+      }),
+    });
+
+    if (!resendRes.ok) {
+      const err = await resendRes.text();
+      console.error('Resend error:', err);
+      return res.status(502).json({ error: 'Erro ao enviar email.' });
+    }
+
+    res.json({ ok: true, message: 'Feedback enviado com sucesso!' });
+  } catch (e) {
+    console.error('Feedback error:', e.message);
+    res.status(500).json({ error: 'Erro interno ao enviar feedback.' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Solomon API rodando na porta ${PORT}`);
 });
