@@ -176,6 +176,62 @@ app.post('/feedback', async (req, res) => {
   }
 });
 
+// ── ROTA TEMPORÁRIA DE SETUP DO BANCO (remover após usar) ──
+app.get('/setup-db-now', async (req, res) => {
+  const secret = req.query.secret;
+  if(secret !== 'solomon2026') return res.status(403).json({error:'Acesso negado.'});
+
+  const { Pool } = require('pg');
+  const dbUrl = process.env.DATABASE_PUBLIC_URL || process.env.DATABASE_URL;
+  if(!dbUrl) return res.status(500).json({error:'DATABASE_URL não definida.'});
+
+  const pool = new Pool({
+    connectionString: dbUrl,
+    ssl: { rejectUnauthorized: false },
+    connectionTimeoutMillis: 15000,
+    max: 1,
+  });
+
+  const schema = `
+    CREATE TABLE IF NOT EXISTS usuarios (
+      id SERIAL PRIMARY KEY, email TEXT UNIQUE NOT NULL, criado_em TIMESTAMPTZ DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS magic_links (
+      id SERIAL PRIMARY KEY, usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE,
+      email TEXT NOT NULL, token TEXT UNIQUE NOT NULL, expira_em TIMESTAMPTZ NOT NULL,
+      usado BOOLEAN DEFAULT FALSE, criado_em TIMESTAMPTZ DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS sessoes_auth (
+      id SERIAL PRIMARY KEY, usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE,
+      email TEXT NOT NULL, token TEXT UNIQUE NOT NULL, expira_em TIMESTAMPTZ NOT NULL,
+      criado_em TIMESTAMPTZ DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS diario (
+      id SERIAL PRIMARY KEY, usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE,
+      dados JSONB, sentimento TEXT, intencao TEXT, grabovoi TEXT, selo TEXT,
+      freq_nome TEXT, freq_hz NUMERIC, solfeggio_hz NUMERIC, duracao_min INTEGER,
+      criado_em TIMESTAMPTZ DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS idx_diario_usuario ON diario(usuario_id);
+    CREATE INDEX IF NOT EXISTS idx_diario_criado ON diario(criado_em DESC);
+    CREATE INDEX IF NOT EXISTS idx_magic_token ON magic_links(token);
+    CREATE INDEX IF NOT EXISTS idx_sessoes_token ON sessoes_auth(token);
+    CREATE INDEX IF NOT EXISTS idx_sessoes_usuario ON sessoes_auth(usuario_id);
+  `;
+
+  let client;
+  try {
+    client = await pool.connect();
+    await client.query(schema);
+    res.json({ ok: true, message: 'Tabelas criadas com sucesso!' });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  } finally {
+    if(client) client.release();
+    await pool.end();
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Solomon API rodando na porta ${PORT}`);
 });
