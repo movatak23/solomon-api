@@ -1,16 +1,18 @@
 {
-  "name": "solomon-api",
+  "name": "solomon-db",
   "version": "1.0.0",
-  "description": "Backend da API Solomon — ritual de manifestação com IA",
+  "description": "Backend de autenticação e diário em nuvem do Solomon",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "node --watch index.js"
+    "dev": "node --watch index.js",
+    "setup-db": "node setup-db.js"
   },
   "engines": {
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "pg": "^8.11.3"
   }
 }

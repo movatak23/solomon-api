@@ -50,6 +50,21 @@ html,body{width:100%;height:100%;background:var(--deep);color:var(--white-soft);
 .step-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:.15em;color:var(--gold-dim);text-transform:uppercase;}
 .step-line{flex:1;height:1px;background:rgba(201,168,76,.15);margin-bottom:18px;}
 .step-line.done{background:rgba(201,168,76,.4);}
+/* ── YOUTUBE PLAYER ── */
+.yt-input-wrap{display:flex;gap:8px;margin-bottom:12px;}
+.yt-input{flex:1;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.2);border-radius:4px;color:var(--white-soft);font-family:'Cormorant Garamond',serif;font-size:14px;padding:10px 12px;outline:none;transition:border-color .3s;}
+.yt-input:focus{border-color:var(--gold);}
+.yt-input::placeholder{color:var(--gold-dim);font-style:italic;}
+.yt-load-btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;color:var(--deep);background:var(--gold);border:none;padding:10px 14px;border-radius:4px;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.yt-load-btn:hover{background:var(--gold-light);}
+.yt-player-wrap{position:relative;width:100%;padding-bottom:56.25%;border-radius:6px;overflow:hidden;background:#000;display:none;}
+.yt-player-wrap.active{display:block;}
+.yt-player-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+.yt-hint{font-size:12px;color:var(--gold-dim);font-style:italic;text-align:center;margin-top:8px;line-height:1.5;}
+.yt-strip{display:none;align-items:center;gap:8px;background:rgba(255,0,0,.08);border:1px solid rgba(255,80,80,.2);border-radius:100px;padding:4px 14px;margin-bottom:8px;justify-content:center;}
+.yt-strip.visible{display:flex;}
+.yt-strip-dot{width:6px;height:6px;border-radius:50%;background:#ff4444;flex-shrink:0;}
+.yt-strip-text{font-family:'Cormorant Garamond',serif;font-size:12px;color:#ff8080;font-style:italic;}
 /* ── SCREEN INTENÇÃO ── */
 #screen-intent{background:radial-gradient(ellipse at 50% 30%,#1a0e18 0%,var(--deep) 75%);}
 .intent-example{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:rgba(201,168,76,.5);padding:8px 12px;border-left:2px solid rgba(201,168,76,.2);margin-bottom:8px;cursor:pointer;transition:all .2s;border-radius:0 4px 4px 0;}
@@ -174,7 +189,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
 .ctrl-btn.main{width:66px;height:66px;border-width:2px;}
 .ctrl-btn.small{width:44px;height:44px;}
 .ctrl-btn:active{transform:scale(.95);}
-.vol-player-row{display:flex;align-items:center;gap:10px;width:100%;max-width:260px;margin:0 auto 12px;}
+.vol-player-row{display:flex;align-items:center;gap:10px;width:100%;max-width:300px;margin:0 auto 6px;}
+.vol-section{width:100%;max-width:300px;margin:0 auto;}
+.vol-section-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.3em;color:var(--gold-dim);text-transform:uppercase;text-align:center;margin-bottom:4px;display:block;}
+.dual-vol{display:flex;flex-direction:column;gap:6px;width:100%;max-width:300px;margin:0 auto 10px;}
+.dual-vol-row{display:flex;align-items:center;gap:8px;}
+.dvr-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.2em;color:var(--gold-dim);white-space:nowrap;min-width:60px;}
+.dvr-label.music{color:rgba(201,168,76,.8);}
 .music-strip{display:none;align-items:center;gap:8px;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.12);border-radius:100px;padding:4px 14px;margin-bottom:8px;text-align:center;justify-content:center;}
 .music-strip.visible{display:flex;}
 .music-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:fdot 2s ease-in-out infinite;flex-shrink:0;}
@@ -214,8 +235,85 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
 .music-sheet.open{transform:translateY(0);}
 .sheet-handle{width:40px;height:3px;background:rgba(201,168,76,.3);border-radius:2px;margin:0 auto 18px;}
 .sheet-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;text-align:center;margin-bottom:16px;}
-/* SCROLLBAR */
+
+/* ── RESPIRAÇÃO GUIADA ── */
+.breath-ring{position:absolute;width:220px;height:220px;border-radius:50%;border:2px solid rgba(201,168,76,0);pointer-events:none;transition:none;}
+.breath-ring.active{animation:breathAnim var(--breath-dur,4s) ease-in-out infinite;}
+@keyframes breathAnim{0%,100%{transform:scale(.85);border-color:rgba(201,168,76,.15);}50%{transform:scale(1.15);border-color:rgba(201,168,76,.5);}}
+.breath-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.4em;color:var(--gold-dim);text-align:center;margin-top:-12px;margin-bottom:8px;min-height:16px;transition:all .5s;}
+
+/* ── MODO FOCO ── */
+.focus-overlay{position:fixed;inset:0;z-index:400;background:rgba(6,4,8,.97);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;opacity:0;pointer-events:none;transition:opacity .8s;}
+.focus-overlay.active{opacity:1;pointer-events:all;}
+.focus-seal{width:260px;height:260px;filter:drop-shadow(0 0 30px rgba(201,168,76,.5));animation:sealBreath 4s ease-in-out infinite;}
+.focus-exit{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.4em;color:rgba(201,168,76,.3);background:none;border:none;cursor:pointer;text-transform:uppercase;padding:8px;margin-top:20px;}
+.focus-exit:hover{color:var(--gold);}
+.focus-timer{font-family:'Cinzel',serif;font-size:28px;letter-spacing:.3em;color:rgba(201,168,76,.6);}
+
+/* ── STATS SCREEN ── */
+#screen-stats{background:var(--deep2);}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:480px;margin-bottom:20px;}
+.stat-card{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);border-radius:6px;padding:16px 12px;text-align:center;}
+.stat-val{font-family:'Cinzel Decorative',cursive;font-size:clamp(20px,5vw,28px);color:var(--gold);display:block;margin-bottom:4px;}
+.stat-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;color:var(--gold-dim);text-transform:uppercase;}
+.stat-bar-wrap{width:100%;max-width:480px;margin-bottom:24px;}
+.stat-bar-item{margin-bottom:12px;}
+.stat-bar-header{display:flex;justify-content:space-between;margin-bottom:4px;}
+.stat-bar-name{font-family:'Cinzel',serif;font-size:10px;color:var(--silver);letter-spacing:.1em;}
+.stat-bar-count{font-family:'Cinzel',serif;font-size:10px;color:var(--gold);}
+.stat-bar-bg{height:4px;background:rgba(201,168,76,.1);border-radius:2px;overflow:hidden;}
+.stat-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;transition:width .8s ease;}
+.streak-display{text-align:center;margin-bottom:20px;width:100%;max-width:480px;}
+.streak-fire{font-size:32px;display:block;margin-bottom:4px;}
+.streak-val{font-family:'Cinzel Decorative',cursive;font-size:36px;color:var(--gold);}
+.streak-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.4em;color:var(--gold-dim);text-transform:uppercase;}
+.export-row{display:flex;gap:10px;width:100%;max-width:480px;margin-top:8px;}
+
+/* ── SINO DE ENCERRAMENTO ── */
+.bell-overlay{position:fixed;inset:0;z-index:450;background:rgba(6,4,8,.85);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;opacity:0;pointer-events:none;transition:opacity .6s;}
+.bell-overlay.active{opacity:1;pointer-events:all;}
+.bell-icon{font-size:64px;animation:bellRing .5s ease-in-out 3;}
+@keyframes bellRing{0%,100%{transform:rotate(0);}25%{transform:rotate(15deg);}75%{transform:rotate(-15deg);}}
+.bell-msg{font-family:'Cinzel Decorative',cursive;font-size:18px;color:var(--gold);text-align:center;}
+.bell-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--silver);text-align:center;}
+.bell-btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.3em;color:var(--deep);background:var(--gold);border:none;padding:14px 32px;border-radius:2px;cursor:pointer;margin-top:8px;}
+
+/* ── MODO FOCO BTN NO PLAYER ── */
+.focus-fab{position:fixed;bottom:130px;right:16px;z-index:180;background:rgba(10,6,8,.9);border:1px solid rgba(201,168,76,.2);border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(8px);transition:all .2s;}
+.focus-fab svg{color:var(--gold-dim);width:18px;height:18px;}
+.focus-fab:hover{border-color:var(--gold);}
+
+/* ── IA BADGE NA INTRO ── */
+.ai-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.05));border:1px solid rgba(201,168,76,.3);border-radius:100px;padding:4px 12px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.25em;color:var(--gold);margin-bottom:6px;}
+
+/* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--deep);}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px;}
+
+/* ── AUTH MODAL ── */
+.auth-modal{position:fixed;inset:0;z-index:600;background:rgba(6,4,8,.95);display:flex;align-items:flex-end;justify-content:center;padding:20px;backdrop-filter:blur(8px);}
+.auth-modal.hidden{display:none;}
+.auth-box{background:var(--deep2);border:1px solid rgba(201,168,76,.25);border-radius:12px 12px 0 0;padding:28px 24px 40px;width:100%;max-width:480px;}
+.auth-title{font-family:'Cinzel Decorative',cursive;font-size:16px;color:var(--gold);text-align:center;margin-bottom:6px;}
+.auth-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--silver);text-align:center;margin-bottom:20px;line-height:1.5;}
+.auth-input{width:100%;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.2);border-radius:4px;color:var(--white-soft);font-family:'Cormorant Garamond',serif;font-size:16px;padding:13px 14px;outline:none;margin-bottom:12px;transition:border-color .3s;}
+.auth-input:focus{border-color:var(--gold);}
+.auth-input::placeholder{color:var(--gold-dim);font-style:italic;}
+.auth-sent{display:none;text-align:center;padding:16px 0;}
+.auth-sent.active{display:block;}
+.auth-sent-icon{font-size:40px;display:block;margin-bottom:10px;}
+.auth-sent-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--silver);line-height:1.6;}
+
+/* ── CLOUD BANNER ── */
+.cloud-banner{display:none;align-items:center;gap:10px;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:6px;padding:10px 14px;margin-bottom:16px;width:100%;max-width:480px;cursor:pointer;transition:all .2s;}
+.cloud-banner:hover{border-color:var(--gold);}
+.cloud-banner.visible{display:flex;}
+.cloud-banner-icon{font-size:18px;flex-shrink:0;}
+.cloud-banner-text{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.2em;color:var(--gold-dim);text-transform:uppercase;}
+.cloud-banner-sub{font-family:'Cormorant Garamond',serif;font-size:12px;color:var(--silver);font-style:italic;}
+.cloud-user{display:none;align-items:center;gap:8px;padding:8px 0;margin-bottom:8px;}
+.cloud-user.visible{display:flex;}
+.cloud-user-email{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.2em;color:var(--gold);flex:1;}
+.cloud-logout{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.2em;color:var(--gold-dim);background:none;border:1px solid rgba(201,168,76,.2);padding:4px 8px;border-radius:2px;cursor:pointer;}
 /* CUSTOM SEARCH */
 .search-input{width:100%;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.2);border-radius:4px;color:var(--white-soft);font-family:'Cormorant Garamond',serif;font-size:15px;padding:11px 14px;outline:none;margin-bottom:10px;}
 .search-input:focus{border-color:var(--gold);}
@@ -253,19 +351,19 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
     <div class="ob-slide next" id="ob1" style="background:radial-gradient(ellipse at 30% 60%,#0e1a18 0%,var(--deep) 75%);">
       <span class="ob-icon">🎧</span>
       <div class="ob-title">Frequências que Entrainam o Cérebro</div>
-      <p class="ob-text">Sons diferentes em cada ouvido criam uma <strong>terceira frequência</strong> percebida pelo cérebro — induzindo estados de meditação, foco ou cura. Use sempre <strong>fones de ouvido</strong> para o efeito completo.</p>
+      <p class="ob-text">Sons diferentes em cada ouvido criam uma <strong>terceira frequência</strong> percebida pelo cérebro - induzindo estados de meditação, foco ou cura. Use sempre <strong>fones de ouvido</strong> para o efeito completo.</p>
     </div>
     <!-- Slide 2 -->
     <div class="ob-slide next" id="ob2" style="background:radial-gradient(ellipse at 70% 40%,#1a1508 0%,var(--deep) 75%);">
       <span class="ob-icon">🔢</span>
       <div class="ob-title">Números Grabovoi</div>
-      <p class="ob-text">Sequências numéricas usadas como <strong>foco de intenção</strong> durante a meditação. No SOLOMON, cada dígito é convertido em um <strong>tom sonoro</strong> tocado em sequência — transformando o número em música.</p>
+      <p class="ob-text">Sequências numéricas usadas como <strong>foco de intenção</strong> durante a meditação. No SOLOMON, cada dígito é convertido em um <strong>tom sonoro</strong> tocado em sequência - transformando o número em música.</p>
     </div>
     <!-- Slide 3 -->
     <div class="ob-slide next" id="ob3" style="background:radial-gradient(ellipse at 50% 30%,#1a0e08 0%,var(--deep) 75%);">
       <span class="ob-icon">✡️</span>
       <div class="ob-title">Selos de Salomão</div>
-      <p class="ob-text">Pentáculos planetários medievais usados como <strong>âncora visual</strong> durante a sessão. Cada selo corresponde a um planeta e uma intenção — Júpiter para prosperidade, Vênus para amor, Sol para sabedoria.</p>
+      <p class="ob-text">Pentáculos planetários medievais usados como <strong>âncora visual</strong> durante a sessão. Cada selo corresponde a um planeta e uma intenção - Júpiter para prosperidade, Vênus para amor, Sol para sabedoria.</p>
     </div>
     <!-- Slide 4 -->
     <div class="ob-slide next" id="ob4" style="background:radial-gradient(ellipse at 50% 50%,#0e1220 0%,var(--deep) 75%);">
@@ -301,9 +399,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
   </div>
   <div id="planet-today-intro" class="planet-card" style="max-width:400px;margin-bottom:24px;"></div>
   <div style="width:100%;max-width:400px;">
-    <div class="intro-card" onclick="goTo('screen-intent')">
+    <div class="intro-card" onclick="goTo('screen-intent')" style="border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.08);">
       <div class="intro-card-icon">✦</div>
-      <div><span class="intro-card-title">Nova Sessão</span><div class="intro-card-desc">Escreva sua intenção e monte o ritual</div></div>
+      <div>
+        <span class="ai-badge">✦ IA DISPONÍVEL</span>
+        <span class="intro-card-title">Nova Sessão</span>
+        <div class="intro-card-desc">Escreva sua intenção - a IA monta o ritual</div>
+      </div>
     </div>
     <div class="intro-card" onclick="openMusicScreen('intro')">
       <div class="intro-card-icon">♪</div>
@@ -316,6 +418,10 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
     <div class="intro-card" onclick="goTo('screen-water')">
       <div class="intro-card-icon">💧</div>
       <div><span class="intro-card-title">Modo Água</span><div class="intro-card-desc">Programe água com intenção e frequência</div></div>
+    </div>
+    <div class="intro-card" onclick="goTo('screen-stats')">
+      <div class="intro-card-icon">📊</div>
+      <div><span class="intro-card-title">Estatísticas</span><div class="intro-card-desc" id="stats-preview-label">Suas métricas de prática</div></div>
     </div>
     <div style="text-align:center;margin-top:8px;">
       <button class="ob-skip" onclick="goTo('screen-config')">⚙ MODO AVANÇADO</button>
@@ -333,14 +439,19 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
     </div>
     <textarea class="ai-input" id="intent-text" placeholder="Ex: Quero atrair abundância para expandir meu negócio com sabedoria e tranquilidade..." style="height:110px;margin-bottom:16px;"></textarea>
     <div style="margin-bottom:20px;">
-      <div class="section-label">Exemplos — toque para usar</div>
+      <div class="section-label">Exemplos - toque para usar</div>
       <div class="intent-example" onclick="useExample(this)">Atrair prosperidade e abundância financeira para minha família</div>
       <div class="intent-example" onclick="useExample(this)">Alcançar clareza mental e foco para tomar decisões importantes</div>
       <div class="intent-example" onclick="useExample(this)">Curar e regenerar meu corpo com saúde plena e vitalidade</div>
       <div class="intent-example" onclick="useExample(this)">Fortalecer o amor e a harmonia no meu relacionamento</div>
       <div class="intent-example" onclick="useExample(this)">Expandir meu negócio com proteção divina e sabedoria</div>
     </div>
-    <button class="btn-primary" onclick="goToSetup()">CONTINUAR →</button>
+    <button class="btn-primary" onclick="runAIFromIntent()">✦ CRIAR RITUAL COM IA</button>
+    <button class="btn-ghost" onclick="goToSetup()" style="margin-top:10px;">CONFIGURAR MANUALMENTE →</button>
+    <div class="ai-loading" id="intent-ai-loading" style="padding:20px 0;">
+      <div class="ai-spinner"></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--silver);text-align:center;margin-top:12px;">O oráculo está sintonizando suas frequências...</div>
+    </div>
   </div>
 </div>
 
@@ -437,7 +548,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
     <span class="section-label">Tipo</span>
     <div class="music-tabs">
       <button class="music-tab active" id="mst-ambient" onclick="switchMusicTabAll(this,'ambient')">AMBIENT</button>
-      <button class="music-tab" id="mst-upload" onclick="switchMusicTabAll(this,'upload')">MEU ARQUIVO</button>
+      <button class="music-tab" id="mst-youtube" onclick="switchMusicTabAll(this,'youtube')">YOUTUBE</button>
+      <button class="music-tab" id="mst-upload" onclick="switchMusicTabAll(this,'upload')">ARQUIVO</button>
       <button class="music-tab" id="mst-none" onclick="switchMusicTabAll(this,'none')">SEM MÚSICA</button>
     </div>
     <div id="ms-panel-ambient" class="music-tab-panel active">
@@ -449,6 +561,20 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
       </div>
       <div class="vol-row" style="margin-top:14px;">
         <span class="vol-label">VOLUME</span>
+        <input type="range" class="vol-slider" id="ms-yt-vol" min="0" max="100" value="40" oninput="setMusicVolAll(this)">
+      </div>
+    </div>
+    <div id="ms-panel-youtube" class="music-tab-panel">
+      <div class="yt-input-wrap">
+        <input type="url" class="yt-input" id="ms-yt-input" placeholder="Cole o link do YouTube aqui..." oninput="previewYT(this.value)">
+        <button class="yt-load-btn" onclick="loadYT()">▶ CARREGAR</button>
+      </div>
+      <div class="yt-player-wrap" id="ms-yt-player">
+        <iframe id="ms-yt-iframe" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+      <div class="yt-hint">Cole o link de qualquer vídeo ou playlist do YouTube.<br>A música toca junto com as frequências binaurais.</div>
+      <div class="vol-row" style="margin-top:12px;">
+        <span class="vol-label">VOLUME MÚSICA</span>
         <input type="range" class="vol-slider" id="ms-music-vol" min="0" max="100" value="40" oninput="setMusicVolAll(this)">
       </div>
     </div>
@@ -570,7 +696,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
         <button class="solf-btn" onclick="selectSolfeggio(this,852)" data-hz="852"><span class="shz">852</span><span class="sname">Intuição</span></button>
         <button class="solf-btn" onclick="selectSolfeggio(this,963)" data-hz="963"><span class="shz">963</span><span class="sname">Conexão divina</span></button>
         <button class="solf-btn" onclick="selectSolfeggio(this,432)" data-hz="432"><span class="shz">432</span><span class="sname">Harmonia univ.</span></button>
-        <button class="solf-btn" onclick="selectSolfeggio(this,0)" data-hz="0"><span class="shz">—</span><span class="sname">Desativar</span></button>
+        <button class="solf-btn" onclick="selectSolfeggio(this,0)" data-hz="0"><span class="shz">-</span><span class="sname">Desativar</span></button>
       </div>
     </div>
 
@@ -579,7 +705,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
       <span class="section-label">VI · Música de Fundo</span>
       <div class="music-tabs">
         <button class="music-tab active" onclick="switchMusicTab(this,'ambient')">AMBIENT</button>
-        <button class="music-tab" onclick="switchMusicTab(this,'upload')">MEU ARQUIVO</button>
+        <button class="music-tab" onclick="switchMusicTab(this,'youtube')">YOUTUBE</button>
+        <button class="music-tab" onclick="switchMusicTab(this,'upload')">ARQUIVO</button>
         <button class="music-tab" onclick="switchMusicTab(this,'none')">SEM MÚSICA</button>
       </div>
       <div class="music-tab-panel active" id="panel-ambient">
@@ -589,7 +716,21 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
           <button class="ambient-btn" onclick="selectAmbient(this,'forest')"><span class="aname">FLORESTA</span>Vento, pássaros</button>
           <button class="ambient-btn" onclick="selectAmbient(this,'cosmos')"><span class="aname">COSMOS</span>Drone espacial</button>
         </div>
-        <div class="vol-row"><span class="vol-label">VOL. MÚSICA</span><input type="range" class="vol-slider" id="music-vol" min="0" max="100" value="40" oninput="setMusicVol(this)"></div>
+        <div class="vol-row"><span class="vol-label">VOL. MÚSICA</span><input type="range" class="vol-slider" id="cfg-yt-vol" min="0" max="100" value="40" oninput="setMusicVol(this)"></div>
+      </div>
+      <div class="music-tab-panel" id="panel-youtube">
+        <div class="yt-input-wrap">
+          <input type="url" class="yt-input" id="cfg-yt-input" placeholder="Cole o link do YouTube..." oninput="previewYT(this.value)">
+          <button class="yt-load-btn" onclick="loadYT()">▶ CARREGAR</button>
+        </div>
+        <div class="yt-player-wrap" id="cfg-yt-player">
+          <iframe id="cfg-yt-iframe" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        <div class="yt-hint">A música toca junto com as frequências binaurais.</div>
+        <div class="vol-row" style="margin-top:10px;">
+          <span class="vol-label">VOLUME</span>
+          <input type="range" class="vol-slider" id="music-vol" min="0" max="100" value="40" oninput="setMusicVol(this)">
+        </div>
       </div>
       <div class="music-tab-panel" id="panel-upload">
         <div class="upload-area"><input type="file" accept="audio/*" onchange="handleUpload(this)"><svg style="color:var(--gold-dim);margin-bottom:8px;" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span class="upload-label">Toque para escolher</span><span class="upload-hint">MP3, WAV, AAC, OGG</span><div class="upload-file-name" id="upload-fname"></div></div>
@@ -616,6 +757,10 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
 <!-- ═══ PLAYER ═══ -->
 <div class="screen" id="screen-player">
   <button class="back-btn" onclick="stopAndBack()">← ENCERRAR</button>
+  <!-- FAB foco -->
+  <button class="focus-fab" onclick="enterFocusMode()" title="Modo Foco">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+  </button>
   <!-- FAB música -->
   <button class="music-fab" id="music-fab" onclick="toggleMusicSheet()" title="Música de fundo">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
@@ -626,7 +771,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
     <div class="sheet-title">♪ Música de Fundo</div>
     <div class="music-tabs">
       <button class="music-tab active" id="sh-tab-ambient" onclick="switchMusicSheet(this,'ambient')">AMBIENT</button>
-      <button class="music-tab" id="sh-tab-upload" onclick="switchMusicSheet(this,'upload')">MEU ARQUIVO</button>
+      <button class="music-tab" id="sh-tab-youtube" onclick="switchMusicSheet(this,'youtube')">YOUTUBE</button>
+      <button class="music-tab" id="sh-tab-upload" onclick="switchMusicSheet(this,'upload')">ARQUIVO</button>
       <button class="music-tab" id="sh-tab-none" onclick="switchMusicSheet(this,'none')">SEM MÚSICA</button>
     </div>
     <div id="sh-panel-ambient" class="music-tab-panel active">
@@ -637,6 +783,20 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
         <button class="ambient-btn" id="sh-amb-cosmos" onclick="selectAmbientSheet(this,'cosmos')"><span class="aname">COSMOS</span>Drone espacial</button>
       </div>
       <div class="vol-row" style="margin-top:12px;">
+        <span class="vol-label">VOLUME</span>
+        <input type="range" class="vol-slider" id="sh-yt-vol" min="0" max="100" value="40" oninput="setMusicVolSheet(this)">
+      </div>
+    </div>
+    <div id="sh-panel-youtube" class="music-tab-panel">
+      <div class="yt-input-wrap" style="margin-top:8px;">
+        <input type="url" class="yt-input" id="sh-yt-input" placeholder="Cole o link do YouTube..." oninput="previewYT(this.value)">
+        <button class="yt-load-btn" onclick="loadYT()">▶</button>
+      </div>
+      <div class="yt-player-wrap" id="sh-yt-player">
+        <iframe id="sh-yt-iframe" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+      <div class="yt-hint">Toca junto com as frequências.</div>
+      <div class="vol-row" style="margin-top:10px;">
         <span class="vol-label">VOLUME</span>
         <input type="range" class="vol-slider" id="sh-music-vol" min="0" max="100" value="40" oninput="setMusicVolSheet(this)">
       </div>
@@ -654,9 +814,20 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
     <button class="btn-ghost" onclick="closeMusicSheet()">FECHAR</button>
   </div>
   <div style="width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;padding-top:52px;">
-    <div class="seal-container"><div class="seal-aura"></div><div class="seal-ring-outer"></div><div class="seal-ring-inner"></div><svg id="seal-svg" viewBox="0 0 100 100" fill="none"></svg></div>
+    <div class="seal-container" id="seal-container">
+      <div class="seal-aura"></div>
+      <div class="seal-ring-outer"></div>
+      <div class="seal-ring-inner"></div>
+      <div class="breath-ring" id="breath-ring"></div>
+      <svg id="seal-svg" viewBox="0 0 100 100" fill="none"></svg>
+    </div>
+    <div class="breath-label" id="breath-label"></div>
     <div class="music-strip" id="music-strip"><div class="music-dot"></div><div class="music-strip-text" id="music-strip-text"></div></div>
-    <div class="solf-strip" id="solf-strip"><div class="music-dot" style="background:#9b8fd0;"></div><div class="music-strip-text" id="solf-strip-text"></div></div>
+    <div class="yt-strip" id="yt-strip">
+    <div class="yt-strip-dot"></div>
+    <div class="yt-strip-text" id="yt-strip-text">▶ YouTube ativo</div>
+  </div>
+  <div class="solf-strip" id="solf-strip"><div class="music-dot" style="background:#9b8fd0;"></div><div class="music-strip-text" id="solf-strip-text"></div></div>
     <div class="ticker-wrap"><div class="ticker-label">Número Grabovoi</div><div class="ticker-digits" id="ticker-digits"></div></div>
     <div class="rep-counter" id="rep-counter">Ciclo 1</div>
     <div class="freq-badge-wrap"><div class="freq-badge"><div class="freq-dot"></div><div class="freq-text" id="freq-label"></div></div></div>
@@ -673,10 +844,23 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
       </button>
     </div>
-    <div class="vol-player-row">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dim)" stroke-width="1.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
-      <input type="range" class="vol-slider" id="volume-slider" min="0" max="100" value="70" oninput="setVolume(this)" style="flex:1;">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dim)" stroke-width="1.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+    <div class="dual-vol">
+      <div class="dual-vol-row">
+        <span class="dvr-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:middle;margin-right:3px;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          FREQ
+        </span>
+        <input type="range" class="vol-slider" id="volume-slider" min="0" max="100" value="70" oninput="setVolume(this)" style="flex:1;">
+        <span style="font-family:'Cinzel',serif;font-size:9px;color:var(--gold-dim);min-width:28px;text-align:right;" id="vol-freq-val">70%</span>
+      </div>
+      <div class="dual-vol-row">
+        <span class="dvr-label music">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:middle;margin-right:3px;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          MÚSICA
+        </span>
+        <input type="range" class="vol-slider" id="player-music-vol" min="0" max="100" value="40" oninput="setPlayerMusicVol(this)" style="flex:1;">
+        <span style="font-family:'Cinzel',serif;font-size:9px;color:rgba(201,168,76,.8);min-width:28px;text-align:right;" id="vol-music-val">40%</span>
+      </div>
     </div>
     <div class="intention-display" id="intention-display"></div>
   </div>
@@ -739,6 +923,89 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("d
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
     ÁGUA
   </button>
+  <button class="nav-btn" id="nav-stats" onclick="navGo('screen-stats','nav-stats')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    STATS
+  </button>
+</div>
+
+<!-- ═══ STATS ═══ -->
+<div class="screen" id="screen-stats" style="background:var(--deep2);">
+  <button class="back-btn" onclick="goTo('screen-intro')">← VOLTAR</button>
+  <div style="width:100%;max-width:480px;padding-top:56px;">
+    <div style="text-align:center;margin-bottom:16px;">
+      <div class="app-title" style="font-size:18px;">Estatísticas</div>
+      <div style="font-size:13px;color:var(--silver);font-style:italic;margin-top:4px;">Sua jornada de manifestação</div>
+    </div>
+    <!-- Cloud status -->
+    <div class="cloud-user visible" id="stats-cloud-user" style="display:none;">
+      <span style="font-size:14px;">☁️</span>
+      <span class="cloud-user-email" id="stats-user-email"></span>
+      <button class="cloud-logout" onclick="logout()">SAIR</button>
+    </div>
+    <div class="cloud-banner" id="stats-cloud-banner" onclick="openAuthModal()">
+      <span class="cloud-banner-icon">☁️</span>
+      <div><div class="cloud-banner-text">BACKUP NA NUVEM</div><div class="cloud-banner-sub">Faça login para salvar seu diário em todos os dispositivos</div></div>
+    </div>
+    <div class="streak-display">
+      <span class="streak-fire">🔥</span>
+      <div><span class="streak-val" id="stat-streak">0</span></div>
+      <div class="streak-label">dias consecutivos</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><span class="stat-val" id="stat-total">0</span><span class="stat-label">Sessões</span></div>
+      <div class="stat-card"><span class="stat-val" id="stat-hours">0h</span><span class="stat-label">Total praticado</span></div>
+      <div class="stat-card"><span class="stat-val" id="stat-avg">0</span><span class="stat-label">Média min/sessão</span></div>
+      <div class="stat-card"><span class="stat-val" id="stat-this-week">0</span><span class="stat-label">Esta semana</span></div>
+    </div>
+    <div class="stat-bar-wrap">
+      <span class="section-label">Frequências mais usadas</span>
+      <div id="stat-freq-bars"></div>
+    </div>
+    <div class="stat-bar-wrap">
+      <span class="section-label">Selos mais usados</span>
+      <div id="stat-seal-bars"></div>
+    </div>
+    <div class="export-row">
+      <button class="btn-ghost" onclick="syncToCloud()" id="sync-btn" style="flex:1;margin:0;">☁ SINCRONIZAR</button>
+      <button class="btn-ghost" onclick="exportDiary('txt')" style="flex:1;margin:0;">⬇ TEXTO</button>
+      <button class="btn-ghost" onclick="clearDiary()" style="flex:1;margin:0;color:rgba(139,26,26,.8);border-color:rgba(139,26,26,.4);">✕ LIMPAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOCUS OVERLAY -->
+<div class="focus-overlay" id="focus-overlay">
+  <svg class="focus-seal" id="focus-seal-svg" viewBox="0 0 100 100" fill="none"></svg>
+  <div class="focus-timer" id="focus-timer">10:00</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:rgba(201,168,76,.4);letter-spacing:.2em;">Respire e contemple</div>
+  <button class="focus-exit" onclick="exitFocusMode()">TOCAR PARA SAIR DO MODO FOCO</button>
+</div>
+
+<!-- BELL OVERLAY -->
+<div class="bell-overlay" id="bell-overlay">
+  <div class="bell-icon">🔔</div>
+  <div class="bell-msg">Sessão Concluída</div>
+  <div class="bell-sub" id="bell-sub-text">Sua intenção foi enviada ao universo.</div>
+  <button class="bell-btn" onclick="closeBellAndFeel()">REGISTRAR EXPERIÊNCIA</button>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="auth-modal hidden" id="auth-modal">
+  <div class="auth-box">
+    <div class="auth-title">Salvar na Nuvem</div>
+    <div class="auth-sub">Digite seu email para receber um link de acesso.<br>Sem senha. Simples assim.</div>
+    <div id="auth-form-wrap">
+      <input type="email" class="auth-input" id="auth-email" placeholder="seu@email.com" autocomplete="email">
+      <button class="btn-primary" onclick="sendMagicLink()" style="margin-bottom:10px;">✦ ENVIAR LINK DE ACESSO</button>
+      <button class="btn-ghost" onclick="closeAuthModal()">CANCELAR</button>
+    </div>
+    <div class="auth-sent" id="auth-sent">
+      <span class="auth-sent-icon">✉️</span>
+      <div class="auth-sent-msg">Link enviado! Verifique seu email e clique no link para entrar.<br><br><span style="color:var(--gold-dim);font-size:12px;">O link expira em 15 minutos.</span></div>
+      <button class="btn-ghost" onclick="closeAuthModal()" style="margin-top:16px;">FECHAR</button>
+    </div>
+  </div>
 </div>
 
 <!-- FEELING MODAL -->
@@ -810,7 +1077,7 @@ const S = {
   intention:'',grabovoi:'520 741 8',seal:'jupiter1',
   freqName:'theta',binauralHz:6,solfeggioHz:0,
   durationMin:10,playing:false,muted:false,volume:.7,
-  musicMode:'ambient',ambientType:'gregorian',musicVolume:.4,
+  musicMode:'ambient',ambientType:'gregorian',musicVolume:.4,youtubeUrl:'',youtubeEmbed:'',youtubeName:'',
   uploadedBuffer:null,uploadedName:'',pendingAudio:null,
   timeLeft:0,totalTime:0,repCount:1,digitIndex:0,digits:[],
   timerInterval:null,tickerInterval:null,
@@ -818,7 +1085,7 @@ const S = {
 };
 
 // ══════════════════════════════════════════════════════
-// MUSIC SCREEN — estado de origem para voltar corretamente
+// MUSIC SCREEN - estado de origem para voltar corretamente
 // ══════════════════════════════════════════════════════
 let musicReturnScreen = 'screen-intro';
 
@@ -838,10 +1105,26 @@ function confirmMusic() {
 
 function syncMusicScreenUI() {
   // Sincroniza abas
-  ['ambient','upload','none'].forEach(m => {
-    document.getElementById('mst-'+m).classList.toggle('active', S.musicMode === m);
-    document.getElementById('ms-panel-'+m).classList.toggle('active', S.musicMode === m);
+  ['ambient','youtube','upload','none'].forEach(m => {
+    const t = document.getElementById('mst-'+m);
+    const p = document.getElementById('ms-panel-'+m);
+    if(t) t.classList.toggle('active', S.musicMode === m);
+    if(p) p.classList.toggle('active', S.musicMode === m);
   });
+  // Restaurar URL se já carregada
+  if(S.youtubeUrl) {
+    ['ms-yt-input','cfg-yt-input','sh-yt-input'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.value=S.youtubeUrl;
+    });
+    if(S.youtubeEmbed) {
+      ['ms-yt-iframe','cfg-yt-iframe','sh-yt-iframe'].forEach((id,i)=>{
+        const iframe=document.getElementById(id);
+        const player=document.getElementById(['ms-yt-player','cfg-yt-player','sh-yt-player'][i]);
+        if(iframe) iframe.src=S.youtubeEmbed;
+        if(player) player.classList.add('active');
+      });
+    }
+  }
   // Sincroniza ambient selecionado
   ['gregorian','tibetan','forest','cosmos'].forEach(a => {
     const btn = document.getElementById('amb-'+a);
@@ -861,14 +1144,14 @@ function syncMusicScreenUI() {
 }
 
 function switchMusicTabAll(btn, mode) {
-  // Atualiza screen-music
   document.querySelectorAll('#screen-music .music-tab').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('#screen-music .music-tab-panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('ms-panel-'+mode).classList.add('active');
+  if(S.musicMode === 'youtube' && mode !== 'youtube') stopYT();
   S.musicMode = mode;
-  // Sincroniza config original
   syncConfigMusicUI();
+  updateMusicStrip();
 }
 
 function selectAmbientAll(btn, type) {
@@ -876,6 +1159,20 @@ function selectAmbientAll(btn, type) {
   btn.classList.add('active');
   S.ambientType = type;
   syncConfigMusicUI();
+}
+
+function setPlayerMusicVol(input) {
+  const v = parseInt(input.value);
+  input.style.setProperty('--pct', v+'%');
+  S.musicVolume = v / 100;
+  // Sincroniza todos sliders de música
+  ['ms-music-vol','ms-music-vol2','ms-yt-vol','music-vol','cfg-yt-vol','sh-music-vol','sh-yt-vol','player-music-vol'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el && el !== input) { el.value = v; el.style.setProperty('--pct', v+'%'); }
+  });
+  if(musicBus) musicBus.gain.value = S.musicVolume;
+  const lbl = document.getElementById('vol-music-val');
+  if(lbl) lbl.textContent = v+'%';
 }
 
 function setMusicVolAll(input) {
@@ -921,9 +1218,11 @@ function toggleMusicSheet() {
 function closeMusicSheet() { document.getElementById('music-sheet').classList.remove('open'); }
 
 function syncSheetUI() {
-  ['ambient','upload','none'].forEach(m => {
-    document.getElementById('sh-tab-'+m).classList.toggle('active', S.musicMode===m);
-    document.getElementById('sh-panel-'+m).classList.toggle('active', S.musicMode===m);
+  ['ambient','youtube','upload','none'].forEach(m => {
+    const tab = document.getElementById('sh-tab-'+m);
+    const pan = document.getElementById('sh-panel-'+m);
+    if(tab) tab.classList.toggle('active', S.musicMode===m);
+    if(pan) pan.classList.toggle('active', S.musicMode===m);
   });
   ['gregorian','tibetan','forest','cosmos'].forEach(a => {
     const btn = document.getElementById('sh-amb-'+a);
@@ -964,13 +1263,112 @@ function applyMusicSheet() {
   syncSheetUI();
 }
 
+// ══════════════════════════════════════════════════════
+// YOUTUBE
+// ══════════════════════════════════════════════════════
+function extractYTId(url) {
+  if(!url) return null;
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&?#\s]+)/,
+    /youtube\.com\/playlist\?list=([^&?#\s]+)/,
+  ];
+  for(const p of patterns) {
+    const m = url.match(p);
+    if(m) return m[1];
+  }
+  return null;
+}
+
+function extractYTPlaylist(url) {
+  const m = url.match(/[?&]list=([^&?#\s]+)/);
+  return m ? m[1] : null;
+}
+
+function buildYTEmbedUrl(url) {
+  const id = extractYTId(url);
+  const list = extractYTPlaylist(url);
+  if(!id && !list) return null;
+  let embed = 'https://www.youtube.com/embed/';
+  if(id && !url.includes('playlist')) {
+    embed += id + '?autoplay=1&enablejsapi=1';
+    if(list) embed += '&list=' + list;
+  } else if(list) {
+    embed += 'videoseries?list=' + list + '&autoplay=1';
+  }
+  return embed;
+}
+
+function previewYT(val) {
+  // Sincroniza todos os inputs de URL
+  ['ms-yt-input','cfg-yt-input','sh-yt-input'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el && el.value !== val) el.value = val;
+  });
+  S.youtubeUrl = val;
+}
+
+function loadYT() {
+  // Pega URL de qualquer input visível
+  const inputs = ['ms-yt-input','cfg-yt-input','sh-yt-input'];
+  let url = '';
+  for(const id of inputs) {
+    const el = document.getElementById(id);
+    if(el && el.value.trim()) { url = el.value.trim(); break; }
+  }
+  if(!url) { alert('Cole um link do YouTube primeiro.'); return; }
+
+  const embedUrl = buildYTEmbedUrl(url);
+  if(!embedUrl) { alert('Link inválido. Use um link do YouTube.'); return; }
+
+  S.youtubeUrl = url;
+  S.youtubeEmbed = embedUrl;
+
+  // Injeta em todos os iframes
+  const iframes = ['ms-yt-iframe','cfg-yt-iframe','sh-yt-iframe'];
+  const players = ['ms-yt-player','cfg-yt-player','sh-yt-player'];
+  iframes.forEach((id, i) => {
+    const iframe = document.getElementById(id);
+    const player = document.getElementById(players[i]);
+    if(iframe) iframe.src = embedUrl;
+    if(player) player.classList.add('active');
+  });
+
+  // Extrai título do vídeo para exibir
+  const vidId = extractYTId(url);
+  const list = extractYTPlaylist(url);
+  S.youtubeName = list ? '▶ Playlist do YouTube' : '▶ YouTube · ' + (vidId || '');
+  updateMusicStrip();
+}
+
+function stopYT() {
+  ['ms-yt-iframe','cfg-yt-iframe','sh-yt-iframe'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.src = '';
+  });
+  ['ms-yt-player','cfg-yt-player','sh-yt-player'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.classList.remove('active');
+  });
+  S.youtubeUrl = ''; S.youtubeEmbed = ''; S.youtubeName = '';
+  const strip = document.getElementById('yt-strip');
+  if(strip) strip.classList.remove('visible');
+}
+
 function updateMusicStrip() {
   const ms = document.getElementById('music-strip'), mt = document.getElementById('music-strip-text');
-  if(S.musicMode==='none') { ms.classList.remove('visible'); }
-  else if(S.musicMode==='upload'&&S.uploadedName) { ms.classList.add('visible'); mt.textContent='♪ '+S.uploadedName; }
-  else if(S.musicMode==='ambient') {
-    const n={gregorian:'Canto Gregoriano',tibetan:'Bol Tibetano',forest:'Floresta',cosmos:'Cosmos'};
-    ms.classList.add('visible'); mt.textContent='♪ '+(n[S.ambientType]||'Ambient');
+  const ys = document.getElementById('yt-strip'), yt = document.getElementById('yt-strip-text');
+  // YouTube strip separado
+  if(S.musicMode==='youtube' && S.youtubeName) {
+    if(ys) { ys.classList.add('visible'); yt.textContent = S.youtubeName; }
+    ms.classList.remove('visible');
+  } else {
+    if(ys) ys.classList.remove('visible');
+    if(S.musicMode==='none') { ms.classList.remove('visible'); }
+    else if(S.musicMode==='upload'&&S.uploadedName) { ms.classList.add('visible'); mt.textContent='♪ '+S.uploadedName; }
+    else if(S.musicMode==='ambient') {
+      const n={gregorian:'Canto Gregoriano',tibetan:'Bol Tibetano',forest:'Floresta',cosmos:'Cosmos'};
+      ms.classList.add('visible'); mt.textContent='♪ '+(n[S.ambientType]||'Ambient');
+    }
   }
   document.getElementById('music-fab').classList.toggle('active-music', S.musicMode!=='none');
 }
@@ -1008,7 +1406,7 @@ function checkOnboarding() {
 // ══════════════════════════════════════════════════════
 // NAV INFERIOR
 // ══════════════════════════════════════════════════════
-const NAV_SCREENS_WITH_NAV = ['screen-intro','screen-intent','screen-setup','screen-diary','screen-water','screen-music','screen-config','screen-ai'];
+const NAV_SCREENS_WITH_NAV = ['screen-intro','screen-intent','screen-setup','screen-diary','screen-water','screen-stats','screen-music','screen-config','screen-ai'];
 const PLAYER_SCREENS = ['screen-player'];
 
 function navGo(screen, navId) {
@@ -1035,12 +1433,13 @@ function goTo(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
   if(id==='screen-diary') renderDiary();
+  if(id==='screen-stats') renderStats();
   updateNavVisibility(id);
   updateIntroLabels();
 }
 
 // ══════════════════════════════════════════════════════
-// FLUXO ÚNICO — INTENÇÃO → SETUP → PLAYER
+// FLUXO ÚNICO - INTENÇÃO → SETUP → PLAYER
 // ══════════════════════════════════════════════════════
 function useExample(el) {
   document.getElementById('intent-text').value = el.textContent.trim();
@@ -1068,7 +1467,7 @@ function buildSetupScreen() {
       <button onclick="applyPlanetSuggestion()" style="margin-left:auto;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.2em;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);padding:6px 10px;border-radius:2px;cursor:pointer;white-space:nowrap;">APLICAR</button>
     </div>`;
 
-  // Grabovoi — top 6
+  // Grabovoi - top 6
   const grabs = GRABOVOI_DB.slice(0,6);
   document.getElementById('setup-grabovoi-presets').innerHTML = grabs.map(g=>
     `<button class="preset-btn${S.grabovoi===g.num?' active':''}" onclick="selectGrabovoiSetup(this,'${g.num}')">
@@ -1076,7 +1475,7 @@ function buildSetupScreen() {
     </button>`
   ).join('');
 
-  // Selos — compacto
+  // Selos - compacto
   const sealKeys = ['jupiter1','jupiter4','sol','lua','venus','marte','jupiter2','saturno'];
   const sealNames = {jupiter1:'Jup.1',jupiter4:'Jup.4',sol:'Sol',lua:'Lua',venus:'Vênus',marte:'Marte',jupiter2:'Jup.2',saturno:'Sat.'};
   document.getElementById('setup-seal-grid').innerHTML = sealKeys.map(k=>
@@ -1187,7 +1586,14 @@ function selectDur(btn,min){document.querySelectorAll('.dur-btn').forEach(b=>b.c
 function switchMusicTab(btn,mode){switchMusicTabAll(btn,mode);}
 function selectAmbient(btn,type){selectAmbientAll(btn,type);}
 function setMusicVol(input){setMusicVolAll(input);}
-function setVolume(input){const v=parseInt(input.value);input.style.setProperty('--pct',v+'%');S.volume=v/100;if(audioCtx&&masterGain)masterGain.gain.value=S.muted?0:S.volume;}
+function setVolume(input){
+  const v=parseInt(input.value);
+  input.style.setProperty('--pct',v+'%');
+  S.volume=v/100;
+  if(audioCtx&&masterGain)masterGain.gain.value=S.muted?0:S.volume;
+  const lbl=document.getElementById('vol-freq-val');
+  if(lbl) lbl.textContent=v+'%';
+}
 function handleUpload(input){handleUploadAll(input);}
 
 // ══════════════════════════════════════════════════════
@@ -1198,18 +1604,18 @@ let audioCtx=null,masterGain=null,freqBus=null,musicBus=null;
 function initAudio(){
   if(audioCtx)return;
   audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-  // Limiter suave — apenas contra picos extremos
+  // Limiter suave - apenas contra picos extremos
   const lim=audioCtx.createDynamicsCompressor();
   lim.threshold.value=-3;lim.knee.value=3;lim.ratio.value=20;lim.attack.value=0.001;lim.release.value=0.1;
   lim.connect(audioCtx.destination);
   masterGain=audioCtx.createGain();
   masterGain.gain.value=S.volume;
   masterGain.connect(lim);
-  // Gain separado para frequências (binaural+solfeggio) — baixo
+  // Gain separado para frequências (binaural+solfeggio) - baixo
   freqBus=audioCtx.createGain();
   freqBus.gain.value=0.28;
   freqBus.connect(masterGain);
-  // Gain separado para música — alto e independente
+  // Gain separado para música - alto e independente
   musicBus=audioCtx.createGain();
   musicBus.gain.value=S.musicVolume;
   musicBus.connect(masterGain);
@@ -1304,7 +1710,7 @@ function highlightDigit(idx){
   S.digits.forEach((_,i)=>{const el=document.getElementById('td-'+i);if(el)el.classList.toggle('active',i===idx);});
 }
 
-// ══ MÚSICA — bus próprio, volumes altos e limpos ══
+// ══ MÚSICA - bus próprio, volumes altos e limpos ══
 function startMusic(){
   S.musicNodes=stopNodes(S.musicNodes);
   if(!audioCtx||!musicBus)return;
@@ -1320,7 +1726,7 @@ function buildAmbient(type){
   else buildCosmos();
 }
 
-// GREGORIANO — 2 notas simultâneas com fade lento, sem reverb sintético
+// GREGORIANO - 2 notas simultâneas com fade lento, sem reverb sintético
 function buildGregorian(){
   const scale=[130.81,146.83,164.81,174.61,196,220,246.94];
   const pairs=[[0,2],[1,4],[2,5],[0,3],[3,6],[1,5]];
@@ -1345,7 +1751,7 @@ function buildGregorian(){
   playPair();
 }
 
-// TIBETANO — bol com harmônicos reais
+// TIBETANO - bol com harmônicos reais
 function buildTibetan(){
   const bowls=[432,528,396,639,741];
   let bi=0;
@@ -1370,7 +1776,7 @@ function buildTibetan(){
   bowl();
 }
 
-// FLORESTA — ruído rosa suave (sem white noise bruto) + pássaros melódicos
+// FLORESTA - ruído rosa suave (sem white noise bruto) + pássaros melódicos
 function buildForest(){
   // Ruído rosa via múltiplos passes
   const rate=audioCtx.sampleRate;
@@ -1416,7 +1822,7 @@ function buildForest(){
   bird();
 }
 
-// COSMOS — sines suaves com LFO de amplitude lento (sem sawtooth)
+// COSMOS - sines suaves com LFO de amplitude lento (sem sawtooth)
 function buildCosmos(){
   const freqs=[110,164.81,220,293.66];
   freqs.forEach((f,i)=>{
@@ -1424,7 +1830,7 @@ function buildCosmos(){
     o.type='sine'; o.frequency.value=f;
     // detune leve para warmth sem distorção
     o.detune.value=(i%2===0?-4:4)+i*2;
-    // LFO de amplitude — tremolo muito lento
+    // LFO de amplitude - tremolo muito lento
     const lfo=audioCtx.createOscillator(), lg=audioCtx.createGain();
     lfo.type='sine'; lfo.frequency.value=0.06+i*0.03;
     lg.gain.value=0.06;
@@ -1494,6 +1900,7 @@ function startSession(){
     audioCtx.decodeAudioData(S.pendingAudio.slice(0),buf=>{S.uploadedBuffer=buf;startAudio();startMusic();},()=>startAudio());
   } else {startAudio();startMusic();}
   startTimer();
+  setTimeout(startBreath, 1500);
   S.lastSession={intention:S.intention,grabovoi:S.grabovoi,seal:S.seal,freqName:S.freqName,binauralHz:S.binauralHz,solfeggioHz:S.solfeggioHz,durationMin:S.durationMin,date:new Date().toISOString()};
 }
 
@@ -1503,15 +1910,26 @@ function startTimer(){
     if(!S.playing)return;
     S.timeLeft=Math.max(0,S.timeLeft-1);
     updateTimer();updateProgress();
-    if(S.timeLeft<=0){clearInterval(S.timerInterval);S.playing=false;updatePlayIcon();stopNodes(S.nodes);stopNodes(S.musicNodes);showFeelingModal();}
+    if(S.timeLeft<=0){
+      clearInterval(S.timerInterval);S.playing=false;updatePlayIcon();
+      stopNodes(S.nodes);stopNodes(S.musicNodes);stopBreath();
+      recordAnalytics(S.lastSession);
+      showBellOverlay();
+    }
   },1000);
 }
 
-function updateTimer(){const m=Math.floor(S.timeLeft/60).toString().padStart(2,'0'),s=(S.timeLeft%60).toString().padStart(2,'0');document.getElementById('timer-text').textContent=`${m}:${s}`;}
+function updateTimer(){
+  const m=Math.floor(S.timeLeft/60).toString().padStart(2,'0'),s=(S.timeLeft%60).toString().padStart(2,'0');
+  const txt=`${m}:${s}`;
+  document.getElementById('timer-text').textContent=txt;
+  syncFocusTimer(txt);
+}
 function updateProgress(){const pct=S.totalTime>0?((S.totalTime-S.timeLeft)/S.totalTime)*100:0;document.getElementById('progress-fill').style.width=pct+'%';}
 
 function stopAndBack(){
-  S.playing=false;clearInterval(S.timerInterval);stopAllAudio();
+  S.playing=false;clearInterval(S.timerInterval);stopAllAudio();stopBreath();exitFocusMode();
+  if(S.musicMode==='youtube')stopYT();
   if(S.lastSession.date)showFeelingModal();
   else goTo('screen-intro');
 }
@@ -1525,10 +1943,13 @@ function closeFeelingModal(){document.getElementById('feeling-modal').classList.
 function saveDiaryEntry(){
   const feeling=document.getElementById('feeling-input').value.trim();
   const entries=JSON.parse(localStorage.getItem('solomon_diary')||'[]');
-  entries.unshift({...S.lastSession,feeling,id:Date.now()});
-  if(entries.length>50)entries.pop();
+  const entry={...S.lastSession,feeling,id:Date.now()};
+  entries.unshift(entry);
+  if(entries.length>200)entries.pop();
   localStorage.setItem('solomon_diary',JSON.stringify(entries));
   document.getElementById('feeling-modal').classList.add('hidden');
+  updateIntroLabels();
+  saveToCloud(entry);
   goTo('screen-diary');
 }
 
@@ -1607,8 +2028,29 @@ function stopWaterSound(){if(waterCtx){waterCtx.close();waterCtx=null;}}
 // ══════════════════════════════════════════════════════
 // AI SESSION
 // ══════════════════════════════════════════════════════
-// URL do backend Solomon — atualizar após deploy no Railway
+// URL do backend Solomon - atualizar após deploy no Railway
 const SOLOMON_API = 'https://solomon-api-production.up.railway.app';
+
+async function runAIFromIntent(){
+  const txt = document.getElementById('intent-text').value.trim();
+  if(!txt){ document.getElementById('intent-text').focus(); return; }
+  // Sincroniza com campo da tela AI e dispara
+  document.getElementById('ai-intention').value = txt;
+  S.intention = txt;
+  // Mostra loading na própria tela
+  document.getElementById('intent-ai-loading').classList.add('active');
+  document.querySelectorAll('#screen-intent .btn-primary, #screen-intent .btn-ghost').forEach(b=>b.style.display='none');
+  try {
+    await runAI();
+    // Se sucesso, vai para tela AI com resultado visível
+    document.getElementById('intent-ai-loading').classList.remove('active');
+    document.querySelectorAll('#screen-intent .btn-primary, #screen-intent .btn-ghost').forEach(b=>b.style.display='');
+    goTo('screen-ai');
+  } catch(e) {
+    document.getElementById('intent-ai-loading').classList.remove('active');
+    document.querySelectorAll('#screen-intent .btn-primary, #screen-intent .btn-ghost').forEach(b=>b.style.display='');
+  }
+}
 
 async function runAI(){
   const intention = document.getElementById('ai-intention').value.trim();
@@ -1689,6 +2131,367 @@ function resetAI(){
 }
 
 // ══════════════════════════════════════════════════════
+// ANALYTICS LOCAL
+// ══════════════════════════════════════════════════════
+function recordAnalytics(session) {
+  try {
+    const stats = JSON.parse(localStorage.getItem('solomon_stats') || '{"sessions":[]}');
+    stats.sessions.push({
+      date: new Date().toISOString(),
+      freq: session.freqName,
+      seal: session.seal,
+      grabovoi: session.grabovoi,
+      durationMin: session.durationMin,
+      solfeggio: session.solfeggioHz || 0,
+    });
+    if(stats.sessions.length > 500) stats.sessions = stats.sessions.slice(-500);
+    localStorage.setItem('solomon_stats', JSON.stringify(stats));
+  } catch(e) {}
+}
+
+function calcStreak() {
+  try {
+    const entries = JSON.parse(localStorage.getItem('solomon_diary') || '[]');
+    if(!entries.length) return 0;
+    const days = [...new Set(entries.map(e => e.date.slice(0,10)))].sort().reverse();
+    let streak = 0;
+    let check = new Date();
+    for(const d of days) {
+      const diff = Math.floor((check - new Date(d)) / 86400000);
+      if(diff <= 1) { streak++; check = new Date(d); }
+      else break;
+    }
+    return streak;
+  } catch(e) { return 0; }
+}
+
+function renderStats() {
+  try {
+    const stats = JSON.parse(localStorage.getItem('solomon_stats') || '{"sessions":[]}');
+    const diary = JSON.parse(localStorage.getItem('solomon_diary') || '[]');
+    const ss = stats.sessions;
+
+    // Totais
+    document.getElementById('stat-total').textContent = ss.length;
+    const totalMin = ss.reduce((a,s) => a + (s.durationMin||0), 0);
+    const hours = Math.floor(totalMin / 60);
+    const mins = totalMin % 60;
+    document.getElementById('stat-hours').textContent = hours > 0 ? `${hours}h${mins}m` : `${mins}m`;
+    const avg = ss.length ? Math.round(totalMin / ss.length) : 0;
+    document.getElementById('stat-avg').textContent = avg;
+
+    // Esta semana
+    const weekAgo = new Date(Date.now() - 7*86400000).toISOString();
+    const thisWeek = ss.filter(s => s.date > weekAgo).length;
+    document.getElementById('stat-this-week').textContent = thisWeek;
+
+    // Streak
+    document.getElementById('stat-streak').textContent = calcStreak();
+
+    // Frequências
+    const freqCount = {};
+    const freqNames = {theta:'Theta',alpha:'Alfa',beta:'Beta',delta:'Delta',gamma:'Gamma',schumann:'Schumann'};
+    ss.forEach(s => { freqCount[s.freq] = (freqCount[s.freq]||0)+1; });
+    const maxF = Math.max(...Object.values(freqCount), 1);
+    document.getElementById('stat-freq-bars').innerHTML = Object.entries(freqCount)
+      .sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v])=>`
+      <div class="stat-bar-item">
+        <div class="stat-bar-header">
+          <span class="stat-bar-name">${freqNames[k]||k}</span>
+          <span class="stat-bar-count">${v}x</span>
+        </div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${Math.round(v/maxF*100)}%"></div></div>
+      </div>`).join('') || '<div style="color:var(--gold-dim);font-style:italic;font-size:13px;">Nenhuma sessão ainda.</div>';
+
+    // Selos
+    const sealCount = {};
+    const sealNames = {jupiter1:'Jup. 1º',jupiter2:'Jup. 2º',jupiter4:'Jup. 4º',sol:'Sol',lua:'Lua',venus:'Vênus',marte:'Marte',saturno:'Saturno'};
+    ss.forEach(s => { sealCount[s.seal] = (sealCount[s.seal]||0)+1; });
+    const maxS = Math.max(...Object.values(sealCount), 1);
+    document.getElementById('stat-seal-bars').innerHTML = Object.entries(sealCount)
+      .sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v])=>`
+      <div class="stat-bar-item">
+        <div class="stat-bar-header">
+          <span class="stat-bar-name">${sealNames[k]||k}</span>
+          <span class="stat-bar-count">${v}x</span>
+        </div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${Math.round(v/maxS*100)}%"></div></div>
+      </div>`).join('') || '';
+
+    // Preview na intro
+    const lbl = document.getElementById('stats-preview-label');
+    if(lbl) lbl.textContent = ss.length ? `${ss.length} sessões · ${calcStreak()} dias seguidos` : 'Comece sua jornada';
+  } catch(e) { console.error('renderStats',e); }
+  updateCloudUI();
+}
+
+// ══════════════════════════════════════════════════════
+// EXPORTAR DIÁRIO
+// ══════════════════════════════════════════════════════
+function exportDiary(fmt) {
+  const entries = JSON.parse(localStorage.getItem('solomon_diary') || '[]');
+  if(!entries.length) { alert('Nenhuma sessao para exportar.'); return; }
+  let txt, mime, ext;
+  if(fmt === 'json') {
+    txt = JSON.stringify(entries, null, 2);
+    mime = 'application/json'; ext = 'json';
+  } else {
+    const freqNames = {theta:'Theta',alpha:'Alfa',beta:'Beta',delta:'Delta',gamma:'Gamma',schumann:'Schumann'};
+    const lines = entries.map(function(e) {
+      const d = new Date(e.date).toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+      var line = '===========================\n';
+      line += 'Data: ' + d + '\n';
+      line += 'Frequencia: ' + (freqNames[e.freqName]||e.freqName) + ' - ' + e.binauralHz + 'Hz\n';
+      line += 'Grabovoi: ' + e.grabovoi + '\n';
+      line += 'Duracao: ' + e.durationMin + ' min\n';
+      line += 'Intencao: ' + (e.intention||'-') + '\n';
+      line += 'Experiencia: ' + (e.feeling||'-') + '\n';
+      return line;
+    });
+    txt = lines.join('\n');
+    mime = 'text/plain'; ext = 'txt';
+  }
+  const blob = new Blob([txt], {type: mime});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'solomon-diario-' + new Date().toISOString().slice(0,10) + '.' + ext;
+  a.click();
+}
+
+function clearDiary() {
+  if(!confirm("Apagar todo o histórico? Esta ação não pode ser desfeita.")) return;
+  localStorage.removeItem('solomon_diary');
+  localStorage.removeItem('solomon_stats');
+  renderDiary(); renderStats();
+}
+
+// ══════════════════════════════════════════════════════
+// RESPIRAÇÃO GUIADA
+// ══════════════════════════════════════════════════════
+let breathInterval = null;
+const BREATH_PHASES = {
+  theta:  [{label:'INSPIRE',dur:4},{label:'SEGURE',dur:4},{label:'EXPIRE',dur:6}],
+  alpha:  [{label:'INSPIRE',dur:4},{label:'EXPIRE',dur:6}],
+  beta:   [{label:'INSPIRE',dur:3},{label:'EXPIRE',dur:3}],
+  delta:  [{label:'INSPIRE',dur:4},{label:'SEGURE',dur:7},{label:'EXPIRE',dur:8}],
+  gamma:  [{label:'INSPIRE',dur:2},{label:'EXPIRE',dur:2}],
+  schumann:[{label:'INSPIRE',dur:4},{label:'EXPIRE',dur:4}],
+};
+
+function startBreath() {
+  stopBreath();
+  const phases = BREATH_PHASES[S.freqName] || BREATH_PHASES.alpha;
+  const ring = document.getElementById('breath-ring');
+  const label = document.getElementById('breath-label');
+  if(!ring || !label) return;
+  ring.classList.add('active');
+  let pi = 0;
+  function nextPhase() {
+    const ph = phases[pi % phases.length]; pi++;
+    label.textContent = ph.label;
+    ring.style.setProperty('--breath-dur', ph.dur + 's');
+    // Reiniciar animação
+    ring.classList.remove('active');
+    void ring.offsetWidth;
+    ring.classList.add('active');
+    breathInterval = setTimeout(nextPhase, ph.dur * 1000);
+  }
+  nextPhase();
+}
+
+function stopBreath() {
+  clearTimeout(breathInterval);
+  const ring = document.getElementById('breath-ring');
+  const label = document.getElementById('breath-label');
+  if(ring) ring.classList.remove('active');
+  if(label) label.textContent = '';
+}
+
+// ══════════════════════════════════════════════════════
+// MODO FOCO
+// ══════════════════════════════════════════════════════
+function enterFocusMode() {
+  const overlay = document.getElementById('focus-overlay');
+  const fSeal = document.getElementById('focus-seal-svg');
+  if(fSeal) fSeal.innerHTML = SEALS_SVG[S.seal] || SEALS_SVG.jupiter1;
+  overlay.classList.add('active');
+  // Trava orientação portrait se possível
+  try { screen.orientation.lock('portrait'); } catch(e) {}
+}
+
+function exitFocusMode() {
+  document.getElementById('focus-overlay').classList.remove('active');
+  try { screen.orientation.unlock(); } catch(e) {}
+}
+
+// Sincronizar timer no focus overlay
+function syncFocusTimer(text) {
+  const ft = document.getElementById('focus-timer');
+  if(ft) ft.textContent = text;
+}
+
+// ══════════════════════════════════════════════════════
+// SINO DE ENCERRAMENTO
+// ══════════════════════════════════════════════════════
+function playBell() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const freqs = [528, 792, 1056];
+    freqs.forEach((f, i) => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      const t = ctx.currentTime + i * 0.15;
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.3, t + 0.05);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 3);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t); o.stop(t + 3.5);
+    });
+    setTimeout(() => ctx.close(), 5000);
+  } catch(e) {}
+}
+
+function showBellOverlay() {
+  playBell();
+  const sub = document.getElementById('bell-sub-text');
+  if(sub && S.intention) sub.textContent = `"${S.intention.slice(0,60)}${S.intention.length>60?'...':''}"`;
+  document.getElementById('bell-overlay').classList.add('active');
+  exitFocusMode();
+}
+
+function closeBellAndFeel() {
+  document.getElementById('bell-overlay').classList.remove('active');
+  showFeelingModal();
+}
+
+// ══════════════════════════════════════════════════════
+// CLOUD AUTH — Solomon DB
+// ══════════════════════════════════════════════════════
+const SOLOMON_DB = 'https://solomon-db-production.up.railway.app';
+
+function getToken() { return localStorage.getItem('solomon_token') || null; }
+function getEmail() { return localStorage.getItem('solomon_email') || null; }
+function isLoggedIn() { return !!getToken(); }
+
+function openAuthModal() {
+  document.getElementById('auth-modal').classList.remove('hidden');
+  document.getElementById('auth-email').focus();
+  document.getElementById('auth-form-wrap').style.display = 'block';
+  document.getElementById('auth-sent').classList.remove('active');
+}
+
+function closeAuthModal() {
+  document.getElementById('auth-modal').classList.add('hidden');
+}
+
+async function sendMagicLink() {
+  const email = document.getElementById('auth-email').value.trim();
+  if (!email || !email.includes('@')) { alert('Digite um email válido.'); return; }
+  try {
+    const res = await fetch(SOLOMON_DB + '/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Erro ao enviar.');
+    document.getElementById('auth-form-wrap').style.display = 'none';
+    document.getElementById('auth-sent').classList.add('active');
+  } catch(e) {
+    alert('Erro: ' + e.message);
+  }
+}
+
+async function logout() {
+  const token = getToken();
+  if (token) {
+    try {
+      await fetch(SOLOMON_DB + '/auth/logout', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token },
+      });
+    } catch(e) {}
+  }
+  localStorage.removeItem('solomon_token');
+  localStorage.removeItem('solomon_email');
+  updateCloudUI();
+}
+
+function updateCloudUI() {
+  const loggedIn = isLoggedIn();
+  const email = getEmail();
+  // Stats screen
+  const userEl = document.getElementById('stats-cloud-user');
+  const bannerEl = document.getElementById('stats-cloud-banner');
+  const emailEl = document.getElementById('stats-user-email');
+  if (userEl) userEl.style.display = loggedIn ? 'flex' : 'none';
+  if (bannerEl) bannerEl.classList.toggle('visible', !loggedIn);
+  if (emailEl && email) emailEl.textContent = email;
+  // Sync btn
+  const syncBtn = document.getElementById('sync-btn');
+  if (syncBtn) syncBtn.textContent = loggedIn ? '☁ SINCRONIZAR' : '☁ FAZER LOGIN';
+}
+
+// Verificar token na URL (callback do magic link)
+function checkAuthCallback() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
+  const email = params.get('email');
+  if (token && email) {
+    localStorage.setItem('solomon_token', token);
+    localStorage.setItem('solomon_email', decodeURIComponent(email));
+    // Limpar URL
+    window.history.replaceState({}, '', window.location.pathname);
+    updateCloudUI();
+    syncToCloud();
+  }
+}
+
+// Sincronizar diário local para nuvem
+async function syncToCloud() {
+  if (!isLoggedIn()) { openAuthModal(); return; }
+  const entries = JSON.parse(localStorage.getItem('solomon_diary') || '[]');
+  if (!entries.length) { alert('Nenhuma sessao local para sincronizar.'); return; }
+  const syncBtn = document.getElementById('sync-btn');
+  if (syncBtn) syncBtn.textContent = '⏳ SINCRONIZANDO...';
+  try {
+    const res = await fetch(SOLOMON_DB + '/diario/sync', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + getToken(),
+      },
+      body: JSON.stringify({ entries }),
+    });
+    const data = await res.json();
+    if (res.status === 401) { logout(); openAuthModal(); return; }
+    if (!res.ok) throw new Error(data.error || 'Erro ao sincronizar.');
+    alert('Sincronizado! ' + data.imported + ' sessoes enviadas para a nuvem.');
+  } catch(e) {
+    alert('Erro: ' + e.message);
+  } finally {
+    if (syncBtn) syncBtn.textContent = '☁ SINCRONIZAR';
+  }
+}
+
+// Salvar sessao automaticamente na nuvem ao encerrar
+async function saveToCloud(sessao) {
+  if (!isLoggedIn()) return;
+  try {
+    await fetch(SOLOMON_DB + '/diario', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + getToken(),
+      },
+      body: JSON.stringify({ sessao }),
+    });
+  } catch(e) {
+    console.log('Cloud save error (nao critico):', e.message);
+  }
+}
+
+// ══════════════════════════════════════════════════════
 // STARS
 // ══════════════════════════════════════════════════════
 function genStars(){
@@ -1707,10 +2510,15 @@ genStars();
 initPlanetOfDay();
 checkOnboarding();
 updateIntroLabels();
+renderStats();
+checkAuthCallback();
+updateCloudUI();
 document.getElementById('volume-slider').style.setProperty('--pct','70%');
 document.getElementById('music-vol').style.setProperty('--pct','40%');
 document.getElementById('music-vol2').style.setProperty('--pct','40%');
 document.getElementById('ms-music-vol').style.setProperty('--pct','40%');
+const pmv = document.getElementById('player-music-vol');
+if(pmv) { pmv.value=40; pmv.style.setProperty('--pct','40%'); }
 document.getElementById('ms-music-vol2').style.setProperty('--pct','40%');
 </script>
 </body>

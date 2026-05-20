@@ -1,47 +1,75 @@
-# Solomon API
+# Solomon DB
 
-Backend da aplicação Solomon — Frequências de Manifestação.
+Backend de autenticação e diário em nuvem do Solomon.
 
-## Rota principal
+## Variáveis de ambiente (Railway)
 
-```
-POST /solomon/ritual
-Content-Type: application/json
-
-{ "intention": "Quero atrair abundância financeira..." }
-```
-
-**Resposta:**
-```json
-{
-  "ok": true,
-  "ritual": {
-    "resumo": "...",
-    "grabovoi": "520 741 8",
-    "grabovoi_nome": "Abundância financeira",
-    "selo": "jupiter1",
-    "selo_nome": "1º Pentáculo de Júpiter",
-    "freq": "theta",
-    "freq_hz": 6,
-    "solfeggio": 528,
-    "solfeggio_nome": "Milagres/DNA (528 Hz)",
-    "duracao": 10,
-    "ritual": "..."
-  }
-}
-```
+| Variável | Valor |
+|---|---|
+| `DATABASE_URL` | Gerado automaticamente pelo Railway ao adicionar PostgreSQL |
+| `RESEND_API_KEY` | Sua chave do Resend (resend.com) |
+| `APP_REDIRECT_URL` | URL do app para redirecionar após login (ex: `https://seusite.com/auth`) |
+| `NODE_ENV` | `production` |
 
 ## Deploy no Railway
 
-1. Crie um novo projeto no Railway
-2. Conecte este repositório GitHub
-3. Adicione a variável de ambiente:
-   - `ANTHROPIC_API_KEY` = sua chave da Anthropic (https://console.anthropic.com)
-4. Railway detecta o `package.json` automaticamente e faz o deploy
+### 1. Criar o projeto
+- New Project → Deploy from GitHub → selecionar `solomon-db`
 
-## Health check
+### 2. Adicionar PostgreSQL
+- No projeto → New → Database → PostgreSQL
+- O Railway injeta `DATABASE_URL` automaticamente
 
+### 3. Adicionar variáveis de ambiente
+- Settings → Variables → adicionar as variáveis da tabela acima
+
+### 4. Rodar o setup do banco
+Após o primeiro deploy, no painel do Railway:
+- Settings → Deploy → Start Command
+- Alterar temporariamente para: `node setup-db.js`
+- Fazer redeploy, aguardar as tabelas serem criadas
+- Voltar o Start Command para: `node index.js`
+- Fazer redeploy novamente
+
+### 5. Domínio
+- Settings → Networking → Generate Domain
+- Anotar a URL gerada (ex: `solomon-db-production.up.railway.app`)
+
+## Rotas
+
+### Auth
 ```
-GET /
+POST /auth/login          { email } → envia magic link
+GET  /auth/verify?token=  → valida link, redireciona com session token
+GET  /auth/me             → dados do usuário (requer Bearer token)
+POST /auth/logout         → invalida session (requer Bearer token)
 ```
-Retorna `{ "status": "ok" }` — use para confirmar que o serviço está no ar.
+
+### Diário
+```
+POST   /diario            { sessao } → salvar sessão
+GET    /diario            → listar sessões
+DELETE /diario/:id        → deletar uma sessão
+DELETE /diario            → limpar todo o diário
+POST   /diario/sync       { entries: [] } → importar diário local
+```
+
+### Stats
+```
+GET /stats                → estatísticas completas do usuário
+```
+
+## Fluxo de autenticação
+
+1. Usuário digita email no app
+2. App chama `POST /auth/login`
+3. Usuário recebe email com link
+4. Usuário clica → `GET /auth/verify?token=xxx`
+5. Backend valida e redireciona para o app com session token
+6. App armazena o token e usa como `Authorization: Bearer <token>` em todas as chamadas
+
+## Resend
+
+- Criar conta em resend.com (gratuito até 3.000 emails/mês)
+- Verificar o domínio `solomonapp.com.br` (ou usar o domínio que tiver)
+- Copiar a API key para a variável `RESEND_API_KEY`
