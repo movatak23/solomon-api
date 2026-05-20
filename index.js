@@ -185,12 +185,18 @@ app.get('/setup-db-now', async (req, res) => {
   const dbUrl = process.env.DATABASE_PUBLIC_URL || process.env.DATABASE_URL;
   if(!dbUrl) return res.status(500).json({error:'DATABASE_URL não definida.'});
 
-  const pool = new Pool({
-    connectionString: dbUrl,
-    ssl: { rejectUnauthorized: false },
-    connectionTimeoutMillis: 15000,
-    max: 1,
-  });
+  // Tentar múltiplas configurações de SSL
+  const configs = [
+    { connectionString: dbUrl, ssl: false },
+    { connectionString: dbUrl, ssl: { rejectUnauthorized: false } },
+    { connectionString: dbUrl + '?sslmode=disable', ssl: false },
+    { connectionString: dbUrl + '?sslmode=require', ssl: { rejectUnauthorized: false } },
+  ];
+
+  for(let i = 0; i < configs.length; i++) {
+    const pool = new Pool({ ...configs[i], connectionTimeoutMillis: 8000, max: 1 });
+    try {
+      const client = await pool.connect();
 
   const schema = `
     CREATE TABLE IF NOT EXISTS usuarios (
@@ -219,17 +225,16 @@ app.get('/setup-db-now', async (req, res) => {
     CREATE INDEX IF NOT EXISTS idx_sessoes_usuario ON sessoes_auth(usuario_id);
   `;
 
-  let client;
-  try {
-    client = await pool.connect();
-    await client.query(schema);
-    res.json({ ok: true, message: 'Tabelas criadas com sucesso!' });
-  } catch(e) {
-    res.status(500).json({ error: e.message });
-  } finally {
-    if(client) client.release();
-    await pool.end();
+      await client.query(schema);
+      client.release();
+      await pool.end();
+      return res.json({ ok: true, message: `Tabelas criadas! Config ${i}` });
+    } catch(e) {
+      await pool.end().catch(()=>{});
+      console.log(`Config ${i} falhou:`, e.message);
+    }
   }
+  res.status(500).json({ error: 'Todas as configurações falharam.' });
 });
 
 app.listen(PORT, () => {
