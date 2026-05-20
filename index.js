@@ -156,8 +156,8 @@ app.post('/feedback', async (req, res) => {
         'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Solomon App <onboarding@resend.dev>',
-        to: 'ronaldoipm23@gmail.com',
+        from: 'Solomon App <solomon@loggzap.com.br>',
+        to: 'ronaldoipm@gmail.com',
         subject: `[Solomon] ${tipoLabel} de usuário`,
         html,
       }),
